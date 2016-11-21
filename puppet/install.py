@@ -59,9 +59,9 @@ def configure_puppet():
         return False
 
     print("cloning puppet repo")
-    if run_cmd('git clone https://github.com/osrf/deb-cache-tri.git /tmp/deb-cache-tri', quiet=False):
+    if run_cmd('git clone https://github.com/osrf/tri-ros-mirros.git /tmp/repo', quiet=False):
         return False
-    if run_cmd('cp -a /tmp/deb-cache-tri/puppet/* /etc/puppet'):
+    if run_cmd('cp -a /tmp/repo/puppet/* /etc/puppet'):
         return False
 
     print("running puppet librarian to install modules")
