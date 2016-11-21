@@ -8,6 +8,8 @@ import sys
 import subprocess
 import platform
 
+REPO_TMP_DIR = "/tmp/repo"
+
 def run_cmd(cmd, quiet=True, extra_args=None, feed=None):
     args = {'shell': True}
     if quiet:
@@ -54,24 +56,30 @@ def configure_puppet():
     if run_cmd('service puppet stop'):
         return False
 
-    print("Clearing /etc/puppet")
-    if run_cmd('rm -rf /etc/puppet'):
+    print("Clearing /etc/puppet and temp repo")
+    if run_cmd('rm -rf /etc/puppet && mkdir /etc/puppet'):
+        return False
+    if run_cmd('rm -rf ' + REPO_TMP_DIR + 'mkdir ' + REPO_TMP_DIR):
         return False
 
     print("cloning puppet repo")
-    if run_cmd('git clone https://github.com/osrf/tri-ros-mirror.git /tmp/repo', quiet=False):
+    if run_cmd('git clone https://github.com/osrf/tri-ros-mirror.git' +
+                                                                REPO_TMP_DIR):
         return False
     if run_cmd('cp -a /tmp/repo/puppet/* /etc/puppet'):
         return False
 
     print("running puppet librarian to install modules")
-    if run_cmd('pushd /tmp/deb-cache-tri/puppet/ && librarian-puppet install && popd', quiet=False):
+    # can not use pushd (bash not default in shell called from python)
+    if run_cmd('cd ' + REPO_TMP_DIR + ' && ' +
+               'librarian-puppet install && ' +
+               'cd -', quiet=False):
         return False
- 
+
     print("running puppet apply site.pp")
     if run_cmd('puppet apply /etc/puppet/manifests/site.pp', quiet=False):
         return False
- 
+
     return True
 
 parser = OptionParser()
