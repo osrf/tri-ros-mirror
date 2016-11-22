@@ -74,8 +74,8 @@ def configure_puppet():
                'librarian-puppet install && ' +
                'cd -', quiet=False):
         return False
-
-   if run_cmd('cp -a /tmp/repo/puppet/* /etc/puppet'):
+    
+    if run_cmd('cp -a /tmp/repo/puppet/* /etc/puppet'):
         return False
 
     print("running puppet apply site.pp")
