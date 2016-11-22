@@ -8,7 +8,8 @@ import sys
 import subprocess
 import platform
 
-REPO_TMP_DIR = "/tmp/repo"
+REPO_TMP_DIR   = '/tmp/repo'
+PUPPET_TMP_DIR = REPO_TMP_DIR + '/puppet'
 
 def run_cmd(cmd, quiet=True, extra_args=None, feed=None):
     args = {'shell': True}
@@ -63,7 +64,7 @@ def configure_puppet():
         return False
 
     print("cloning puppet repo")
-    if run_cmd('git clone https://github.com/osrf/tri-ros-mirror.git' +
+    if run_cmd('git clone https://github.com/osrf/tri-ros-mirror.git ' +
                                                                 REPO_TMP_DIR):
         return False
     if run_cmd('cp -a /tmp/repo/puppet/* /etc/puppet'):
@@ -71,7 +72,7 @@ def configure_puppet():
 
     print("running puppet librarian to install modules")
     # can not use pushd (bash not default in shell called from python)
-    if run_cmd('cd ' + REPO_TMP_DIR + ' && ' +
+    if run_cmd('cd ' + PUPPET_TMP_DIR ' && ' +
                'librarian-puppet install && ' +
                'cd -', quiet=False):
         return False
