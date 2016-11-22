@@ -9,9 +9,14 @@ include files
 include services
 
 include apt
-include aptly
 
 node default {
+
+  class {  '::aptly' :
+      config => {
+         'root_dir' => '/srv/aptly',
+       },
+  }
 
   aptly::mirror { 'ros_stable':
     location      => 'http://packages.ros.org/ros/ubuntu',
