@@ -9,13 +9,21 @@ include files
 include services
 
 include apt
+include gpgkey
 
 node default {
 
   class {  '::aptly' :
-      config => {
-         'root_dir' => '/srv/aptly',
+      config  => {
+         'rootDir' => '/srv/aptly',
        },
+  }
+
+  gpgkey { 'aptly_key': 
+    ensure    => present,
+    keytype   => 'RSA',
+    keylength =>  2048,
+    name      => 'TRI ROS Mirror repo',
   }
 
   aptly::mirror { 'ros_stable':
