@@ -2,6 +2,7 @@ class packages {
 
   package { "wget"            : ensure => installed }
   package { "git"             : ensure => installed }
+  package { "mercurial"       : ensure => installed }
   package { "vim"             : ensure => installed }
   package { "ntp"             : ensure => installed }
   package { "bash-completion" : ensure => installed }
