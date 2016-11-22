@@ -45,7 +45,7 @@ def configure_puppet():
         return False
 
     print("installing puppet, ruby and git")
-    if run_cmd('apt-get install -y puppet ruby git'):
+    if run_cmd('apt-get install -y puppet puppet-module-puppetlabs-stdlib'):
         return False
 
     print("installing puppet-librarian")
@@ -72,7 +72,7 @@ def configure_puppet():
 
     print("running puppet librarian to install modules")
     # can not use pushd (bash not default in shell called from python)
-    if run_cmd('cd ' + PUPPET_TMP_DIR ' && ' +
+    if run_cmd('cd ' + PUPPET_TMP_DIR + ' && ' +
                'librarian-puppet install && ' +
                'cd -', quiet=False):
         return False
