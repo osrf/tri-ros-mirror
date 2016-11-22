@@ -67,14 +67,15 @@ def configure_puppet():
     if run_cmd('git clone https://github.com/osrf/tri-ros-mirror.git ' +
                                                                 REPO_TMP_DIR):
         return False
-    if run_cmd('cp -a /tmp/repo/puppet/* /etc/puppet'):
-        return False
 
     print("running puppet librarian to install modules")
     # can not use pushd (bash not default in shell called from python)
     if run_cmd('cd ' + PUPPET_TMP_DIR + ' && ' +
                'librarian-puppet install && ' +
                'cd -', quiet=False):
+        return False
+
+   if run_cmd('cp -a /tmp/repo/puppet/* /etc/puppet'):
         return False
 
     print("running puppet apply site.pp")
