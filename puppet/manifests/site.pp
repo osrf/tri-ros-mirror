@@ -38,11 +38,10 @@ node default {
 
   $apache_doc_root = "$aptly_public_dir/$aptly_published_name"
 
-  apache::vhost { 'mirror site':
+  apache::vhost { 'mirror_site':
     servername => 'my_server',
     port       => '80',
     docroot    => "$apache_doc_root",
-    ssl        => true,
     options    => 'Indexes MultiViews',
   }
 
