@@ -14,13 +14,10 @@ rvm:
 
 install:
   - export PATH=$PATH:$GEM_HOME/bin
-  - cd $TRAVIS_BUILD_DIR
-  - sudo python puppet/install.py --verbose
-  - echo $PATH
-  - librarian-puppet
 
 script:
   - cd $TRAVIS_BUILD_DIR
+  - sudo python puppet/install.py --verbose
   - sudo find / -name librarian*
   - bash puppet/.travis.run_tests.bash
 
