@@ -47,7 +47,7 @@ def configure_puppet():
     if run_cmd('apt-get update'):
         return False
 
-    print("installing puppet, ruby and git")
+    print("installing puppet and git")
     if run_cmd('apt-get install -y puppet puppet-module-puppetlabs-stdlib'):
         return False
 
