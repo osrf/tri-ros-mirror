@@ -3,6 +3,7 @@ language: ruby
 sudo: true
 os:
   - linux
+dist: trusty
 install:
   - cd $TRAVIS_BUILD_DIR
   - sudo python puppet/install.py --verbose
