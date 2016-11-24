@@ -5,20 +5,22 @@ os:
   - linux
 dist: trusty
 sudo: true
-install:
-  - cd $TRAVIS_BUILD_DIR
-  - sudo python puppet/install.py --verbose
-
 env:
+  - PATH=$PATH:$GEM_HOME/bin
   - PUPPET_GEM_VERSION="~> 3.4.3"
   - PUPPET_GEM_VERSION="~> 3.8.5"
 rvm:
   - 1.9.3
   - 2.3
 
+install:
+  - cd $TRAVIS_BUILD_DIR
+  - sudo python puppet/install.py --verbose
+
 script:
   - cd $TRAVIS_BUILD_DIR
-  - ls
+  - echo $BUNDLE_GEMFILE
+  - set
   - sudo find $TRAVIS_BUILD_DIR -name librarian*
   - sudo find / -name librarian*
   - bash puppet/.travis.run_tests.bash
