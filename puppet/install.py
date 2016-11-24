@@ -3,17 +3,20 @@
 
 # Mostly copied from wg-buildfarm by Tully Foote
 
-from optparse import OptionParser
+import argparse
+
 import sys
 import subprocess
 import platform
 
+VERBOSE        = False
 REPO_TMP_DIR   = '/tmp/repo'
 PUPPET_TMP_DIR = REPO_TMP_DIR + '/puppet'
 
-def run_cmd(cmd, quiet=True, extra_args=None, feed=None):
+class run_cmd:
+    def __init__(self, run_cmd(cmd, quiet=True, extra_args=None, feed=None):
     args = {'shell': True}
-    if quiet:
+    if not VERBOSE and quiet:
         args['stderr'] = args['stdout'] = subprocess.PIPE
     if feed is not None:
         args['stdin'] = subprocess.PIPE
@@ -72,19 +75,25 @@ def configure_puppet():
     # can not use pushd (bash not default in shell called from python)
     if run_cmd('cd ' + PUPPET_TMP_DIR + ' && ' +
                'librarian-puppet install && ' +
-               'cd -', quiet=False):
+               'cd -'):
         return False
     
     if run_cmd('cp -a /tmp/repo/puppet/* /etc/puppet'):
         return False
 
     print("running puppet apply site.pp")
-    if run_cmd('puppet apply /etc/puppet/manifests/site.pp', quiet=False):
+    if run_cmd('puppet apply /etc/puppet/manifests/site.pp'):
         return False
 
     return True
 
-parser = OptionParser()
+parser = argparse.ArgumentParser()
+parser.add_argument("--verbose",
+                  action="store_true",
+                  dest="verbose", default=False,
+                  help="enable debug messages")
+args = parser.parse_args()
+VERBOSE = args.verbose
 
 if not is_ubuntu():
     print("Not ubuntu systems are not supported")
