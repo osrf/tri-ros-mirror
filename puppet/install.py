@@ -13,7 +13,6 @@ REPO_TMP_DIR   = '/tmp/repo'
 PUPPET_TMP_DIR = REPO_TMP_DIR + '/puppet'
 
 class Command:
-
     def __init__(self, _force_verbose=False):
         self.force_verbose = _force_verbose
 
@@ -53,7 +52,7 @@ def configure_puppet(args):
         return False
 
     print("installing puppet and git")
-    if cmd.run('apt-get install -y puppet puppet-module-puppetlabs-stdlib'):
+    if cmd.run('apt-get install -y puppet git'):
         return False
 
     print("installing puppet-librarian")
