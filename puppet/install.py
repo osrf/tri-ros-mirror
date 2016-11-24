@@ -9,23 +9,26 @@ import sys
 import subprocess
 import platform
 
-VERBOSE        = False
 REPO_TMP_DIR   = '/tmp/repo'
 PUPPET_TMP_DIR = REPO_TMP_DIR + '/puppet'
 
-class run_cmd:
-    def __init__(self, run_cmd(cmd, quiet=True, extra_args=None, feed=None):
-    args = {'shell': True}
-    if not VERBOSE and quiet:
-        args['stderr'] = args['stdout'] = subprocess.PIPE
-    if feed is not None:
-        args['stdin'] = subprocess.PIPE
-    if extra_args is not None:
-        args.update(extra_args)
-    p = subprocess.Popen(cmd, **args)
-    if feed is not None:
-        p.communicate(feed)
-    return p.wait()
+class Command:
+
+    def __init__(self, _force_verbose=False):
+        self.force_verbose = _force_verbose
+
+    def run(self, cmd, quiet=True, extra_args=None, feed=None):
+        args = {'shell': True}
+        if not self.force_verbose and quiet:
+            args['stderr'] = args['stdout'] = subprocess.PIPE
+        if feed is not None:
+            args['stdin'] = subprocess.PIPE
+        if extra_args is not None:
+            args.update(extra_args)
+        p = subprocess.Popen(cmd, **args)
+        if feed is not None:
+            p.communicate(feed)
+        return p.wait()
 
 def get_ubuntu_version():
     return platform.dist()[2]
@@ -33,7 +36,7 @@ def get_ubuntu_version():
 def is_ubuntu():
     return platform.dist()[0] == 'Ubuntu'
 
-def configure_puppet():
+def configure_puppet(args):
     """
     Configure puppet in the system slave
      - Install puppet and git
@@ -41,48 +44,50 @@ def configure_puppet():
      - run puppet
     """
 
+    cmd = Command(_force_verbose=args.verbose)
+
     # do stuff with slave
     # first, install puppet
     print("updating apt")
-    if run_cmd('apt-get update'):
+    if cmd.run('apt-get update'):
         return False
 
     print("installing puppet and git")
-    if run_cmd('apt-get install -y puppet puppet-module-puppetlabs-stdlib'):
+    if cmd.run('apt-get install -y puppet puppet-module-puppetlabs-stdlib'):
         return False
 
     print("installing puppet-librarian")
-    if run_cmd('gem install librarian-puppet'):
+    if cmd.run('gem install librarian-puppet'):
         return False
 
     print("stopping puppet")
     # stop puppet
-    if run_cmd('service puppet stop'):
+    if cmd.run('service puppet stop'):
         return False
 
     print("Clearing /etc/puppet and temp repo")
-    if run_cmd('rm -rf /etc/puppet && mkdir /etc/puppet'):
+    if cmd.run('rm -rf /etc/puppet && mkdir /etc/puppet'):
         return False
-    if run_cmd('rm -rf ' + REPO_TMP_DIR + 'mkdir ' + REPO_TMP_DIR):
+    if cmd.run('rm -rf ' + REPO_TMP_DIR + 'mkdir ' + REPO_TMP_DIR):
         return False
 
     print("cloning puppet repo")
-    if run_cmd('git clone https://github.com/osrf/tri-ros-mirror.git ' +
+    if cmd.run('git clone https://github.com/osrf/tri-ros-mirror.git ' +
                                                                 REPO_TMP_DIR):
         return False
 
     print("running puppet librarian to install modules")
     # can not use pushd (bash not default in shell called from python)
-    if run_cmd('cd ' + PUPPET_TMP_DIR + ' && ' +
+    if cmd.run('cd ' + PUPPET_TMP_DIR + ' && ' +
                'librarian-puppet install && ' +
                'cd -'):
         return False
     
-    if run_cmd('cp -a /tmp/repo/puppet/* /etc/puppet'):
+    if cmd.run('cp -a /tmp/repo/puppet/* /etc/puppet'):
         return False
 
     print("running puppet apply site.pp")
-    if run_cmd('puppet apply /etc/puppet/manifests/site.pp'):
+    if cmd.run('puppet apply /etc/puppet/manifests/site.pp'):
         return False
 
     return True
@@ -93,10 +98,9 @@ parser.add_argument("--verbose",
                   dest="verbose", default=False,
                   help="enable debug messages")
 args = parser.parse_args()
-VERBOSE = args.verbose
 
 if not is_ubuntu():
     print("Not ubuntu systems are not supported")
     sys.exit(-1)
 
-configure_puppet()
+configure_puppet(args)
