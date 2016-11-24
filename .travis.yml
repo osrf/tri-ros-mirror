@@ -18,7 +18,10 @@ rvm:
 
 script:
   - cd $TRAVIS_BUILD_DIR
-  - bash puppet/.travis_run_tests.bash
+  - ls
+  - sudo find $TRAVIS_BUILD_DIR -name librarian*
+  - sudo find / -name librarian*
+  - bash puppet/.travis.run_tests.bash
 
 matrix:
   exclude:
