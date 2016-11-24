@@ -21,7 +21,7 @@ node default {
 
   class {  '::aptly' :
       config => {
-         'rootDir' => "$aptly_public_dir"
+         'rootDir' => "$aptly_root_dir"
        },
   }
 
