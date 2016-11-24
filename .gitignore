@@ -2,3 +2,6 @@
 .tmp
 *.swp
 *.swo
+test
+puppet/modules
+*.lock

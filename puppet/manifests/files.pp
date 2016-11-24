@@ -1,4 +1,5 @@
 $confdir_setting = $settings::confdir
+
 class files {
 
   define delete_lines($file, $pattern) {
