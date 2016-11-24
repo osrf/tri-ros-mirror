@@ -3,8 +3,7 @@ language: ruby
 sudo: true
 install:
   - cd $TRAVIS_BUILD_DIR
-  - ls
-  - sudo python puppet/install.py
+  - sudo python puppet/install.py --verbose
 
 env:
   - PUPPET_GEM_VERSION="~> 3.4.3"
@@ -13,8 +12,13 @@ rvm:
   - 1.9.3
   - 2.3
 
-script:    
-  
+script:
+  # check apache is running the mirror
+  - [[ -z $(curl http://localhost/ | grep 'Index of') ]] || exit 1
+  # check jenkins is setup
+  - [[ -f /etc/default/jenkins-slave ]] || exit 1
+  # check aptly mirror exits
+  - aptly mirror show ros_stable
 
 matrix:
   exclude:
@@ -22,4 +26,3 @@ matrix:
       env: PUPPET_GEM_VERSION="~> 3.8.5"
     - rvm: 2.3
       env: PUPPET_GEM_VERSION="~> 3.4.3"
-
