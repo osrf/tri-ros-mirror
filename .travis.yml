@@ -1,9 +1,10 @@
 ---
 language: ruby
-sudo: true
+bundler_args: --without rake
 os:
   - linux
 dist: trusty
+sudo: true
 install:
   - cd $TRAVIS_BUILD_DIR
   - sudo python puppet/install.py --verbose
@@ -16,6 +17,7 @@ rvm:
   - 2.3
 
 script:
+  - cd $TRAVIS_BUILD_DIR
   - bash puppet/.travis_run_tests.bash
 
 matrix:
