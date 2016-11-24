@@ -38,18 +38,9 @@ node default {
 
   $apache_doc_root = "$aptly_public_dir/$aptly_published_name"
 
-  apache::vhost { 'mirror site non-ssl':
-    servername      => 'redirect.example.com',
-    port            => '80',
-    docroot         =>  $apache_doc_root,
-    redirect_status => 'permanent',
-    redirect_dest   => 'https://redirect.example.com/',
-    require         => File[$aptly_public_dir]
-  }
-
-  apache::vhost { 'mirror site ssl':
+  apache::vhost { 'mirror site':
     servername => 'my_server',
-    port       => '443',
+    port       => '80',
     docroot    => "$apache_doc_root",
     ssl        => true,
     options    => 'Indexes MultiViews',
