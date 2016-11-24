@@ -1,0 +1,19 @@
+---
+language: ruby
+sudo: true
+install:
+  - sudo python tri-ros-mirror/puppet/install.py
+
+env:
+  - PUPPET_GEM_VERSION="~> 3.4.3"
+  - PUPPET_GEM_VERSION="~> 3.8.5"
+rvm:
+  - 1.9.3
+  - 2.3
+
+matrix:
+  exclude:
+    - rvm: 1.9.3
+      env: PUPPET_GEM_VERSION="~> 3.8.5"
+    - rvm: 2.3
+      env: PUPPET_GEM_VERSION="~> 3.4.3"
