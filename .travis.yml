@@ -3,7 +3,8 @@ language: ruby
 sudo: true
 install:
   - cd $TRAVIS_BUILD_DIR
-  - sudo python tri-ros-mirror/puppet/install.py
+  - ls
+  - sudo python puppet/install.py
 
 env:
   - PUPPET_GEM_VERSION="~> 3.4.3"
@@ -12,9 +13,13 @@ rvm:
   - 1.9.3
   - 2.3
 
+script:    
+  
+
 matrix:
   exclude:
     - rvm: 1.9.3
       env: PUPPET_GEM_VERSION="~> 3.8.5"
     - rvm: 2.3
       env: PUPPET_GEM_VERSION="~> 3.4.3"
+
