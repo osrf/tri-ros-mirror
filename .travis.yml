@@ -2,6 +2,7 @@
 language: ruby
 sudo: true
 install:
+  - cd $TRAVIS_BUILD_DIR
   - sudo python tri-ros-mirror/puppet/install.py
 
 env:
