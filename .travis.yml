@@ -12,13 +12,15 @@ rvm:
   - 1.9.3
   - 2.3
 
-install:
-  - export PATH=$PATH:$GEM_HOME/bin
-
 script:
   - cd $TRAVIS_BUILD_DIR
+  - export PATH=$PATH:$GEM_HOME/bin
   - sudo python puppet/install.py --verbose
-  - sudo find / -name librarian*
+  # For some reason travis can not find librarian-puppet so rewrite commands from install.py
+  - cd puppet
+  - librarian-puppet install
+  - sudo cp -a /tmp/repo/puppet/* /etc/puppet
+  - puppet apply /etc/puppet/manifests/site.pp puppet apply /etc/puppet/manifests/site.pp
   - bash puppet/.travis.run_tests.bash
 
 matrix:
